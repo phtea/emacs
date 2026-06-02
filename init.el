@@ -50,7 +50,6 @@
 
 (load-theme 'wombat t)
 
-
 ;;; ------------------------------------------------------------
 ;;; Fonts / visual comfort
 ;;; ------------------------------------------------------------
@@ -307,11 +306,6 @@
   (interactive)
   (find-file (expand-file-name "inbox.org" my/notes-directory)))
 
-(defun my/open-tasks ()
-  "Open tasks.org."
-  (interactive)
-  (find-file (expand-file-name "tasks.org" my/notes-directory)))
-
 (defun my/open-emacs-config ()
   "Open Emacs config."
   (interactive)
@@ -381,7 +375,7 @@
     ;; Org
     (kbd "<leader>o a") #'org-agenda
     (kbd "<leader>o c") #'org-capture
-    (kbd "<leader>o t") #'my/open-tasks
+    (kbd "<leader>o t") #'org-todo-list
 
     ;; Config
     (kbd "<leader>e") #'my/open-emacs-config
