@@ -416,6 +416,11 @@
     (with-temp-file home-file
       (insert "#+title: Home\n\nWelcome to your notes.\n\nUse `C-c n` to create or find notes.\n"))))
 
+;;; ------------------------------------------------------------
+;; Open links everywhere!
+;;; ------------------------------------------------------------
+(setq browse-url-browser-function #'browse-url-generic
+      browse-url-generic-program "wslview")
 
 ;;; ------------------------------------------------------------
 ;;; Final
