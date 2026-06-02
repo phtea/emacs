@@ -1,0 +1,13 @@
+eln-cache/
+auto-save-list/
+transient/
+recentf
+bookmarks
+savehist
+history
+url/
+var/
+cache/
+*.elc
+/org-roam.db
+/elpa/
