@@ -101,6 +101,7 @@
 ;;; ------------------------------------------------------------
 ;;; Evil mode
 ;;; ------------------------------------------------------------
+
 (setq-default cursor-type 'box)
 (blink-cursor-mode -1)
 
@@ -119,12 +120,19 @@
   (setq evil-motion-state-cursor 'box)
   (setq evil-emacs-state-cursor 'box))
 
+;; Visualstar
 (use-package evil-visualstar
   :after evil
   :config
   (global-evil-visualstar-mode 1))
 
 (setq evil-search-module 'evil-search)
+
+;; evil with magit
+(use-package evil-collection
+  :after evil
+  :config
+  (evil-collection-init))
 
 ;;; ------------------------------------------------------------
 ;;; Notes directory
@@ -328,35 +336,6 @@
 	 (directory-files-recursively org-directory "\\.org$")))
   (message "Org Agenda files refreshed: %d files" (length org-agenda-files)))
 (add-hook 'emacs-startup-hook #'my/org-refresh-agenda-files)
-
-;;; ------------------------------------------------------------
-;;; Dired + Evil
-;;; ------------------------------------------------------------
-
-(use-package dired
-  :ensure nil
-  :config
-  (setq dired-listing-switches "-alh")
-
-  (with-eval-after-load 'evil
-    (evil-set-initial-state 'dired-mode 'normal)
-
-    (evil-define-key 'normal dired-mode-map
-      (kbd "j") #'dired-next-line
-      (kbd "k") #'dired-previous-line
-      (kbd "h") #'dired-up-directory
-      (kbd "l") #'dired-find-file
-      (kbd "RET") #'dired-find-file
-      (kbd "-") #'dired-up-directory
-      (kbd "q") #'quit-window
-      (kbd "r") #'revert-buffer
-      (kbd "m") #'dired-mark
-      (kbd "u") #'dired-unmark
-      (kbd "x") #'dired-do-flagged-delete
-      (kbd "D") #'dired-do-delete
-      (kbd "C") #'dired-do-copy
-      (kbd "R") #'dired-do-rename
-      (kbd "+") #'dired-create-directory)))
 
 ;;; ------------------------------------------------------------
 ;;; Keybindings
