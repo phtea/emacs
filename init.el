@@ -128,10 +128,6 @@
 (unless (file-directory-p my/notes-directory)
   (make-directory my/notes-directory t))
 
-(unless (file-directory-p (expand-file-name "daily/" my/notes-directory))
-  (make-directory (expand-file-name "daily/" my/notes-directory) t))
-
-
 ;;; ------------------------------------------------------------
 ;;; Org mode
 ;;; ------------------------------------------------------------
@@ -288,25 +284,6 @@
 
 
 ;;; ------------------------------------------------------------
-;;; Daily notes
-;;; ------------------------------------------------------------
-
-(use-package org-roam
-  :config
-  (require 'org-roam-dailies)
-
-  (setq org-roam-dailies-directory "daily/")
-
-  (setq org-roam-dailies-capture-templates
-        '(("d" "default" entry
-           "* %?"
-           :target
-           (file+head
-            "%<%Y-%m-%d>.org"
-            "#+title: %<%Y-%m-%d>\n#+created: %U\n\n")))))
-
-
-;;; ------------------------------------------------------------
 ;;; Helper functions
 ;;; ------------------------------------------------------------
 
@@ -395,9 +372,6 @@
     (kbd "<leader>n i") #'org-roam-node-insert
     (kbd "<leader>n b") #'org-roam-buffer-toggle
     (kbd "<leader>n g") #'org-roam-ui-open
-    (kbd "<leader>n d") #'org-roam-dailies-goto-today
-    (kbd "<leader>n y") #'org-roam-dailies-goto-yesterday
-    (kbd "<leader>n t") #'org-roam-dailies-goto-tomorrow
     (kbd "<leader>n o") #'my/open-notes-directory
     (kbd "<leader>n x") #'my/open-inbox
 
@@ -457,6 +431,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(org-agenda-files
+   '("/home/phtea/notes/projects/notes.org" "/home/phtea/notes/projects/phonk_song_idea.org" "/home/phtea/notes/20260603011815-fl_studio_tutorials.org" "/home/phtea/notes/20260603015114-fl_studio.org" "/home/phtea/notes/20260603142529-emacs.org" "/home/phtea/notes/20260603142734-magit.org" "/home/phtea/notes/home.org" "/home/phtea/notes/inbox.org" "/home/phtea/notes/journal.org" "/home/phtea/notes/tasks.org"))
  '(package-selected-packages
    '(org-roam-ui org-roam mixed-pitch org-appear vertico org-modern orderless marginalia magit gnu-elpa-keyring-update evil consult)))
 (custom-set-faces
