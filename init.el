@@ -119,6 +119,13 @@
   (setq evil-motion-state-cursor 'box)
   (setq evil-emacs-state-cursor 'box))
 
+(use-package evil-visualstar
+  :after evil
+  :config
+  (global-evil-visualstar-mode 1))
+
+(setq evil-search-module 'evil-search)
+
 ;;; ------------------------------------------------------------
 ;;; Notes directory
 ;;; ------------------------------------------------------------
@@ -138,13 +145,6 @@
 
   (setq org-directory my/notes-directory)
 
-  ;; Agenda sees all .org files inside ~/notes
-  (setq org-agenda-files
-	(seq-remove
-	 (lambda (file)
-	   (string-match-p "/\\.?#\\|/\\.#" file))
-	 (directory-files-recursively org-directory "\\.org$")))
-  
   ;; Pretty Org behavior
   (setq org-startup-indented t)
   (setq org-hide-leading-stars t)
@@ -318,6 +318,17 @@
     (re-search-forward "^\\* Tasks")
     (org-end-of-subtree)))
 
+(defun my/org-refresh-agenda-files ()
+  "Refresh Org Agenda files from org-directory."
+  (interactive)
+  (setq org-agenda-files
+	(seq-remove
+	 (lambda (file)
+	   (string-match-p "/\\.?#\\|/\\.#" file))
+	 (directory-files-recursively org-directory "\\.org$")))
+  (message "Org Agenda files refreshed: %d files" (length org-agenda-files)))
+(add-hook 'emacs-startup-hook #'my/org-refresh-agenda-files)
+
 ;;; ------------------------------------------------------------
 ;;; Dired + Evil
 ;;; ------------------------------------------------------------
@@ -357,6 +368,7 @@
 (global-set-key (kbd "C-c i") #'org-roam-node-insert)
 (global-set-key (kbd "C-c b") #'org-roam-buffer-toggle)
 (global-set-key (kbd "C-c e") #'my/open-emacs-config)
+(global-set-key (kbd "C-c r") #'my/org-refresh-agenda-files)
 
 (with-eval-after-load 'evil
   (evil-define-key 'normal 'global
@@ -374,6 +386,7 @@
     (kbd "<leader>n g") #'org-roam-ui-open
     (kbd "<leader>n o") #'my/open-notes-directory
     (kbd "<leader>n x") #'my/open-inbox
+    (kbd "<leader>o r") #'my/org-refresh-agenda-files
 
     ;; Org
     (kbd "<leader>o a") #'org-agenda
@@ -434,7 +447,7 @@
  '(org-agenda-files
    '("/home/phtea/notes/projects/notes.org" "/home/phtea/notes/projects/phonk_song_idea.org" "/home/phtea/notes/20260603011815-fl_studio_tutorials.org" "/home/phtea/notes/20260603015114-fl_studio.org" "/home/phtea/notes/20260603142529-emacs.org" "/home/phtea/notes/20260603142734-magit.org" "/home/phtea/notes/home.org" "/home/phtea/notes/inbox.org" "/home/phtea/notes/journal.org" "/home/phtea/notes/tasks.org"))
  '(package-selected-packages
-   '(org-roam-ui org-roam mixed-pitch org-appear vertico org-modern orderless marginalia magit gnu-elpa-keyring-update evil consult)))
+   '(evil-visualstar org-roam-ui org-roam mixed-pitch org-appear vertico org-modern orderless marginalia magit gnu-elpa-keyring-update evil consult)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -445,3 +458,4 @@
  '(org-level-2 ((t (:height 1.2 :weight bold))))
  '(org-level-3 ((t (:height 1.1 :weight bold))))
  '(org-level-4 ((t (:height 1.05 :weight bold)))))
+
