@@ -171,17 +171,21 @@
         (expand-file-name "inbox.org" org-directory))
 
   (setq org-capture-templates
-        '(("t" "Todo" entry
-           (file "inbox.org")
-           "* TODO %?\n  Created: %U\n")
+	'(("t" "Todo to inbox" entry
+	   (file "inbox.org")
+	   "* TODO [#C] %? :inbox:\n  Created: %U\n")
 
-          ("n" "Note" entry
-           (file "inbox.org")
-           "* %?\n  Created: %U\n")
+	  ("T" "Todo in current note" entry
+	   (function my/org-capture-current-note-tasks)
+	   "** TODO [#C] %?\n   Created: %U\n   Context: %a\n")
 
-          ("j" "Journal" entry
-           (file+datetree "journal.org")
-           "* %?\n  Created: %U\n")))
+	  ("n" "Note to inbox" entry
+	   (file "inbox.org")
+	   "* %?\n  Created: %U\n")
+
+	  ("j" "Journal" entry
+	   (file+datetree "journal.org")
+	   "* %?\n  Created: %U\n")))
 
   ;; Refile between notes
   (setq org-refile-targets
@@ -199,6 +203,15 @@
 (setq org-highest-priority ?A)
 (setq org-lowest-priority ?E)
 (setq org-default-priority ?C)
+
+(setq org-agenda-prefix-format
+      '((agenda . " %i %?-12t")
+        (todo   . " %i ")
+        (tags   . " %i ")
+        (search . " %i ")))
+
+(setq org-agenda-remove-tags t)
+(setq org-agenda-tags-column 0)
 
 ;;; ------------------------------------------------------------
 ;;; Pretty Org UI
@@ -245,22 +258,21 @@
   (org-roam-db-autosync-mode 1)
 
   (setq org-roam-capture-templates
-        '(("d" "default" plain
-           "%?"
-           :target
-           (file+head
-            "%<%Y%m%d%H%M%S>-${slug}.org"
-            "#+title: ${title}\n#+created: %U\n\n")
-           :unnarrowed t)
+	'(("d" "default" plain
+	   "%?"
+	   :target
+	   (file+head
+	    "%<%Y%m%d%H%M%S>-${slug}.org"
+	    "#+title: ${title}\n#+created: %U\n\n* Notes\n\n* Tasks\n")
+	   :unnarrowed t)
 
-          ("p" "project" plain
-           "* Goal\n%?\n\n* Notes\n\n* Tasks\n\n"
-           :target
-           (file+head
-            "projects/${slug}.org"
-            "#+title: ${title}\n#+created: %U\n#+filetags: :project:\n\n")
-           :unnarrowed t))))
-
+	  ("p" "project" plain
+	   "* Goal\n%?\n\n* Notes\n\n* Tasks\n\n* Decisions\n\n* Links\n"
+	   :target
+	   (file+head
+	    "projects/${slug}.org"
+	    "#+title: ${title}\n#+created: %U\n#+filetags: :project:\n\n")
+	   :unnarrowed t))))
 
 ;;; ------------------------------------------------------------
 ;;; Org Roam UI: graph view like Obsidian
@@ -295,7 +307,7 @@
 
 
 ;;; ------------------------------------------------------------
-;;; Helpful functions
+;;; Helper functions
 ;;; ------------------------------------------------------------
 
 (defun my/open-notes-directory ()
@@ -313,6 +325,21 @@
   (interactive)
   (find-file user-init-file))
 
+(defun my/org-capture-current-note-tasks ()
+  "Capture task into Tasks heading of current Org note."
+  (interactive)
+  (let ((file (buffer-file-name)))
+    (unless file
+      (user-error "Current buffer is not visiting a file"))
+    (set-buffer (org-capture-target-buffer file))
+    (goto-char (point-min))
+    (unless (re-search-forward "^\\* Tasks" nil t)
+      (goto-char (point-max))
+      (unless (bolp) (insert "\n"))
+      (insert "\n* Tasks\n"))
+    (goto-char (point-min))
+    (re-search-forward "^\\* Tasks")
+    (org-end-of-subtree)))
 
 ;;; ------------------------------------------------------------
 ;;; Dired + Evil
@@ -381,7 +408,7 @@
 
     ;; Config
     (kbd "<leader>e") #'my/open-emacs-config
-    (kbd "<leader>g") #'magit-status
+    (kbd "<leader>l") #'magit-status ;; l because i'm used to lazygit
     ))
 
 (with-eval-after-load 'org
