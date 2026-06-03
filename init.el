@@ -36,6 +36,10 @@
 (visual-line-mode 1)
 (set-frame-parameter nil 'fullscreen 'fullboth)
 
+(setq select-enable-clipboard t)
+(setq save-interprogram-paste-before-kill t)
+(setq yank-pop-change-selection t)
+
 (set-fringe-mode 10)
 
 (setq ring-bell-function 'ignore)
@@ -64,7 +68,6 @@
                     :height 150
                     :weight 'regular)
 
-
 ;;; ------------------------------------------------------------
 ;;; Line numbers
 ;;; ------------------------------------------------------------
@@ -75,7 +78,6 @@
 (add-hook 'org-mode-hook
           (lambda ()
             (display-line-numbers-mode -1)))
-
 
 ;;; ------------------------------------------------------------
 ;;; Better completion
@@ -97,6 +99,8 @@
   (marginalia-mode 1))
 
 (use-package consult)
+
+(global-set-key (kbd "M-y") #'consult-yank-pop)
 
 ;;; ------------------------------------------------------------
 ;;; Evil mode
@@ -133,6 +137,10 @@
   :after evil
   :config
   (evil-collection-init))
+
+(use-package undo-fu
+  :config
+  (setq evil-undo-system 'undo-fu))
 
 ;;; ------------------------------------------------------------
 ;;; Notes directory
@@ -375,6 +383,10 @@
     ;; Config
     (kbd "<leader>e") #'my/open-emacs-config
     (kbd "<leader>l") #'magit-status ;; l because i'm used to lazygit
+
+    ;; Undo/redo that works. Nice.
+    (kbd "u") #'undo-fu-only-undo
+    (kbd "C-r") #'undo-fu-only-redo
     ))
 
 (with-eval-after-load 'org
