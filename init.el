@@ -195,6 +195,10 @@
    '(org-level-3 ((t (:height 1.10 :weight bold))))
    '(org-level-4 ((t (:height 1.05 :weight bold))))))
 
+;; Priorities from A to E
+(setq org-highest-priority ?A)
+(setq org-lowest-priority ?E)
+(setq org-default-priority ?C)
 
 ;;; ------------------------------------------------------------
 ;;; Pretty Org UI
@@ -209,18 +213,16 @@
   (setq org-modern-hide-stars nil)
   (setq org-modern-table t)
   (setq org-modern-list
-        '((?+ . "•")
-          (?- . "–")
-          (?* . "◦"))))
+	'((?+ . "•")
+	  (?- . "–")
+	  (?* . "◦")))
 
-(use-package org-appear
-  :hook
-  (org-mode . org-appear-mode)
-  :config
-  (setq org-appear-autoemphasis t)
-  (setq org-appear-autolinks t)
-  (setq org-appear-autosubmarkers t))
-
+  (setq org-modern-priority-faces
+	'((?A :background "#E06666" :foreground "black" :weight bold)
+	  (?B :background "#F0A66B" :foreground "black" :weight bold)
+	  (?C :background "#F7E26B" :foreground "black" :weight bold)
+	  (?D :background "#8BC34A" :foreground "black" :weight bold)
+	  (?E :background "#5DADE2" :foreground "black" :weight bold))))
 
 ;;; ------------------------------------------------------------
 ;;; Variable pitch in Org
