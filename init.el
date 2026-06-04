@@ -253,13 +253,49 @@
 	  (?E :background "#5DADE2" :foreground "black" :weight bold))))
 
 ;;; ------------------------------------------------------------
+;;; Enchanced Autocompletion
+;;; ------------------------------------------------------------
+
+(use-package corfu
+  :init
+  (global-corfu-mode))
+
+(use-package cape
+  :after corfu
+  :config
+  (add-to-list 'completion-at-point-functions 'cape-symbol)) ;; completes symbols, functions, variables
+
+(defun my/corfu-next-or-complete ()
+  (interactive)
+  (if (bound-and-true-p completion-in-region-mode)
+      (corfu-next)
+    (completion-at-point)))
+
+(defun my/corfu-previous-or-complete ()
+  (interactive)
+  (if (bound-and-true-p completion-in-region-mode)
+      (corfu-previous)
+    (completion-at-point)))
+
+(with-eval-after-load 'corfu
+  (define-key corfu-map (kbd "C-n") #'corfu-next)
+  (define-key corfu-map (kbd "C-p") #'corfu-previous)
+  (define-key corfu-map (kbd "C-y") #'corfu-insert)
+  (define-key corfu-map (kbd "RET") nil)
+  (define-key corfu-map (kbd "<return>") nil))
+
+(with-eval-after-load 'evil
+  (define-key evil-insert-state-map (kbd "C-n") #'my/corfu-next-or-complete)
+  (define-key evil-insert-state-map (kbd "C-p") #'my/corfu-previous-or-complete)
+  (define-key evil-insert-state-map (kbd "C-y") #'corfu-insert))
+
+;;; ------------------------------------------------------------
 ;;; Variable pitch in Org
 ;;; ------------------------------------------------------------
 
 (use-package mixed-pitch
   :hook
   (org-mode . mixed-pitch-mode))
-
 
 ;;; ------------------------------------------------------------
 ;;; Org Roam: linked notes like Obsidian
@@ -450,7 +486,7 @@
  '(org-agenda-files
    '("/home/phtea/notes/projects/notes.org" "/home/phtea/notes/projects/phonk_song_idea.org" "/home/phtea/notes/20260603011815-fl_studio_tutorials.org" "/home/phtea/notes/20260603015114-fl_studio.org" "/home/phtea/notes/20260603142529-emacs.org" "/home/phtea/notes/20260603142734-magit.org" "/home/phtea/notes/home.org" "/home/phtea/notes/inbox.org" "/home/phtea/notes/journal.org" "/home/phtea/notes/tasks.org"))
  '(package-selected-packages
-   '(evil-visualstar org-roam-ui org-roam mixed-pitch org-appear vertico org-modern orderless marginalia magit gnu-elpa-keyring-update evil consult)))
+   '(cape corfu evil-visualstar org-roam-ui org-roam mixed-pitch org-appear vertico org-modern orderless marginalia magit gnu-elpa-keyring-update evil consult)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
