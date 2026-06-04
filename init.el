@@ -393,8 +393,10 @@
 
     ;; Undo/redo that works. Nice.
     (kbd "u") #'undo-fu-only-undo
-    (kbd "C-r") #'undo-fu-only-redo
-    ))
+    (kbd "C-r") #'undo-fu-only-redo)
+
+  (evil-define-key 'normal org-agenda-mode-map
+    "o" 'delete-other-windows))
 
 (with-eval-after-load 'org
   (evil-define-key 'normal org-mode-map
