@@ -142,6 +142,9 @@
   :config
   (setq evil-undo-system 'undo-fu))
 
+(with-eval-after-load 'git-commit
+  (evil-set-initial-state 'git-commit-mode 'insert))
+
 ;;; ------------------------------------------------------------
 ;;; Notes directory
 ;;; ------------------------------------------------------------
