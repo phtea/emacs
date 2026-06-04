@@ -185,7 +185,7 @@
   (setq org-capture-templates
 	'(("t" "Todo to inbox" entry
 	   (file "inbox.org")
-	   "* TODO [#C] %? :inbox:\n  Created: %U\n")
+	   "* TODO [#C] :inbox: %? \n  Created: %U\n")
 
 	  ("T" "Todo in current note" entry
 	   (function my/org-capture-current-note-tasks)
@@ -357,7 +357,14 @@
 (global-set-key (kbd "C-c e") #'my/open-emacs-config)
 (global-set-key (kbd "C-c r") #'my/org-refresh-agenda-files)
 
+;; Resize text with C-- and C-=
+(global-set-key (kbd "C-=") 'text-scale-increase)
+(global-set-key (kbd "C--") 'text-scale-decrease)
+(global-set-key (kbd "C-0") (lambda () (interactive) (text-scale-set 0)))
+
 (with-eval-after-load 'evil
+  (evil-set-initial-state 'org-agenda-mode 'normal)
+
   (evil-define-key 'normal 'global
     (kbd "<leader>b") #'consult-buffer
 
@@ -449,4 +456,3 @@
  '(org-level-2 ((t (:height 1.2 :weight bold))))
  '(org-level-3 ((t (:height 1.1 :weight bold))))
  '(org-level-4 ((t (:height 1.05 :weight bold)))))
-
