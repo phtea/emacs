@@ -132,7 +132,7 @@
 
 (setq evil-search-module 'evil-search)
 
-;; evil with magit
+;; Evil with Magit
 (use-package evil-collection
   :after evil
   :config
@@ -142,8 +142,12 @@
   :config
   (setq evil-undo-system 'undo-fu))
 
-(with-eval-after-load 'git-commit
-  (evil-set-initial-state 'git-commit-mode 'insert))
+(with-eval-after-load 'evil
+  (evil-set-initial-state 'git-commit-mode 'insert)
+
+  (add-hook 'git-commit-mode-hook
+            (lambda ()
+              (evil-insert-state))))
 
 ;;; ------------------------------------------------------------
 ;;; Notes directory
@@ -437,14 +441,6 @@
   (evil-define-key 'normal org-agenda-mode-map
     "o" 'delete-other-windows))
 
-(with-eval-after-load 'org
-  (evil-define-key 'normal org-mode-map
-    (kbd "TAB") #'org-cycle
-    (kbd "<tab>") #'org-cycle
-    (kbd "S-TAB") #'org-global-cycle
-    (kbd "<backtab>") #'org-global-cycle))
-
-
 ;;; ------------------------------------------------------------
 ;;; Create starter files
 ;;; ------------------------------------------------------------
@@ -466,8 +462,9 @@
       (insert "#+title: Home\n\nWelcome to your notes.\n\nUse `C-c n` to create or find notes.\n"))))
 
 ;;; ------------------------------------------------------------
-;; Open links everywhere!
+;; Open links on WSL!
 ;;; ------------------------------------------------------------
+
 (setq browse-url-browser-function #'browse-url-generic
       browse-url-generic-program "wslview")
 
